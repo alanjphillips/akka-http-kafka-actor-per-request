@@ -8,7 +8,7 @@ class AsyncInitiatorActor(producer: KafkaProducer)(implicit system: ActorSystem)
 
   override def receive: Receive =  {
     case Command(somethingToDo) =>
-      system.actorOf(DispatchAndReceiveActor.props(producer, sender)) ! SomethingToDo
+      system.actorOf(DispatchAndReceiveActor.props(producer, sender)) ! somethingToDo
   }
 
 }

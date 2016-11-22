@@ -5,9 +5,9 @@ import akka.actor.{Actor, ActorRef, Props}
 class DispatchAndReceiveActor(producer: KafkaProducer, origin: ActorRef) extends Actor {
 
   override def receive: Receive = {
-    case SomethingToDo =>
+    case s: SomethingToDo =>
       context.become(responseHandler)
-      self ! SomethingToDoResponse("Simple response, to be sent to the Actor instance by Kafka Consumer: " + self.path)
+      self ! SomethingToDoResponse(s"${s.name} : ${self.path}")
   }
 
   def responseHandler: Receive = {
