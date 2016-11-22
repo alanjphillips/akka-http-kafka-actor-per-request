@@ -26,7 +26,7 @@ class Routes(asyncInitiatorActor: ActorRef) {
           val done: Future[SomethingToDoResponse] = (asyncInitiatorActor ? Command(somethingToDo)).mapTo[SomethingToDoResponse]
           onComplete(done) {
             case Success(s) => complete(s.name)
-            case Failure(f) => complete(BadRequest -> "Failed")
+            case Failure(f) => complete(BadRequest -> s"Failed: $f ")
           }
         }
       }
