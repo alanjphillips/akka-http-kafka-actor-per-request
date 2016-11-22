@@ -18,8 +18,10 @@ object Boot extends App {
 
   val asyncInitiatorActor = system.actorOf(AsyncInitiatorActor.props(producer))
 
-  val routes = Routes(asyncInitiatorActor).workerRoutes
+  val somethingToDoService = new SomethingToDoService(asyncInitiatorActor)
 
-  val bindingFuture = Http().bindAndHandle(routes, "0.0.0.0", 8081)
+  val routes = Routes(somethingToDoService)
+
+  val bindingFuture = Http().bindAndHandle(routes.workerRoutes, "0.0.0.0", 8081)
 
 }
