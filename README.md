@@ -18,9 +18,13 @@ Actor-Per-Http-Request> sbt clean docker:publishLocal
 Actor-Per-Http-Request> docker-compose up
 
 4) Use rest client such as Postman to send http request:
+
 Uri: http://192.168.99.100:8081/service/work
+
 Content-Type: application/json
+
 body:
+
 {
     "name": "test123"
 }
