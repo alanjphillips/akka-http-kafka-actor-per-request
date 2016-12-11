@@ -16,3 +16,7 @@ class SomethingToDoService(asyncInitiatorActor: ActorRef) {
   }
 
 }
+
+object SomethingToDoService {
+  def apply(asyncInitiatorActor: ActorRef): SomethingToDoService = new SomethingToDoService(asyncInitiatorActor)
+}

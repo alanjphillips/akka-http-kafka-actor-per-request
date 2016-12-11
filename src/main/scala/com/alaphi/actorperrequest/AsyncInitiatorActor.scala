@@ -1,10 +1,8 @@
 package com.alaphi.actorperrequest
 
-import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import akka.actor.{Actor, ActorSystem, Props}
 
 class AsyncInitiatorActor(producer: KafkaProducer)(implicit system: ActorSystem) extends Actor {
-
-  // create DispatchAndReceiveActor for each incoming http request, pass this actorRef so Kafka response consumer can pass response
 
   override def receive: Receive =  {
     case Command(somethingToDo) =>

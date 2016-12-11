@@ -14,11 +14,13 @@ object Boot extends App {
 
   val config = ConfigFactory.load()
 
-  val producer = KafkaProducer(system, materializer, executionContext)
+  val consumer = system.actorOf(ResponseDeliveryActor.props)
+
+  val producer = KafkaProducer()
 
   val asyncInitiatorActor = system.actorOf(AsyncInitiatorActor.props(producer))
 
-  val somethingToDoService = new SomethingToDoService(asyncInitiatorActor)
+  val somethingToDoService = SomethingToDoService(asyncInitiatorActor)
 
   val routes = Routes(somethingToDoService)
 
