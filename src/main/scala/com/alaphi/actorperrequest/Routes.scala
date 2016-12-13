@@ -17,7 +17,7 @@ class Routes(somethingToDoService: SomethingToDoService) {
       post {
         entity(as[SomethingToDo]) { somethingToDo =>
           onComplete(somethingToDoService.doSomething(somethingToDo)) {
-            case Success(s) => complete(s.name)
+            case Success(s) => complete(s"${s.getClass.getName}: ${s.name}")
             case Failure(f) => complete(BadRequest -> s"Failed: $f ")
           }
         }

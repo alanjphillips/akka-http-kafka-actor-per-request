@@ -11,7 +11,6 @@ import org.apache.kafka.common.serialization.{ByteArrayDeserializer, StringDeser
 import scala.concurrent.{ExecutionContext, Future}
 
 import io.circe.parser._
-import io.circe.syntax._
 import io.circe.generic.auto._
 
 class ResponseDeliveryActor(implicit as: ActorSystem,
@@ -30,17 +29,11 @@ class ResponseDeliveryActor(implicit as: ActorSystem,
     val done =
       Consumer.committableSource(consumerSettings, Subscriptions.topics("app_commands"))
         .mapAsync(1) { msg =>
-          println(s"Received message from kafka: $msg")
-
-          val origin = decode[Message[SomethingToDoResponse]](msg.record.value)
-
-          origin map { m =>
-            println(s"Received Message from Kafka origin=${m.origin} : payload=${m.payload}")
-        //    as.actorSelection(m.origin) ! m.payload
+          decode[Message[SomethingToDoResponse]](msg.record.value) map { m =>
+            log.info(s"Received Message from Kafka origin=${m.origin} : payload=${m.payload}")
+            context.actorSelection(m.origin) ! m.payload
           }
-
           Future.successful(msg)
-
         }
         .mapAsync(1) { msg =>
           msg.committableOffset.commitScaladsl()

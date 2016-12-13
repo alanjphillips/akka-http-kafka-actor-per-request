@@ -8,20 +8,15 @@ class DispatchAndReceiveActor(producer: KafkaProducer, origin: ActorRef) extends
 
   override def receive: Receive = {
     case s: SomethingToDo =>
-      log.info(s"DispatchAndReceiveActor Received: ${s}")
       context.become(responseHandler)
       val msg = Message(self.path.toStringWithAddress(self.path.address), SomethingToDoResponse(s.name)).asJson
-      log.info(s"msg.noSpaces: ${msg.noSpaces}")
       producer.sendToKafka(msg.noSpaces)
   }
 
   def responseHandler: Receive = {
     case resp: SomethingToDoResponse =>
-      log.info(s"Almost there, received $resp")
+      log.info(s"Got Response from Kafka, received: $resp, sending to ${origin}")
       origin ! resp
-      context.stop(self)
-
-    case Message(originStr, payload) =>
       context.stop(self)
   }
 
