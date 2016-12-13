@@ -1,6 +1,8 @@
 Actor-Per-Http-Request: Service Http requests via Kafka command and response messages
 =====================================================================================
 
+Completed basic Http request -> output kafka -> input kafka -> http response sequence. Proof of concept implementation, not best practices.
+
 Install docker, docker-machine and docker-compose
 
 1) Connect to 'default' machine, see docker docs on how to create machine in virtualbox
@@ -29,3 +31,5 @@ body:
     "name": "test123"
 }
 
+5) To stop, use ctrl+c to kill process in terminal. To ensure all containers are stopped run:
+Actor-Per-Http-Request> docker-compose down
