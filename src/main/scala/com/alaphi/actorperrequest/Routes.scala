@@ -13,17 +13,21 @@ case class Command(somethingToDo: SomethingToDo)
 class Routes(somethingToDoService: SomethingToDoService) {
 
   val workerRoutes = {
-    path("service" / "work") {
-      post {
-        entity(as[SomethingToDo]) { somethingToDo =>
-          onComplete(somethingToDoService.doSomething(somethingToDo)) {
-            case Success(s) => complete(s"${s.getClass.getName}: ${s.name}")
-            case Failure(f) => complete(BadRequest -> s"Failed: $f ")
+    extractTracker { trackerId =>
+      path("service" / "work") {
+        post {
+          entity(as[SomethingToDo]) { somethingToDo =>
+            onComplete(somethingToDoService.doSomething(somethingToDo)) {
+              case Success(s) => complete(s"${s.getClass.getName}: ${s.name}: ${trackerId.getOrElse("NO_TRACKER")}")
+              case Failure(f) => complete(BadRequest -> s"Failed: $f ")
+            }
           }
         }
       }
     }
   }
+
+  def extractTracker = optionalHeaderValueByName("x-request-id")
 
 }
 
